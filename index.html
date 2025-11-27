@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abra seu presente</title>
+
+<!-- Fonte estilosa para o botão -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: 
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url('imagens/pordosollaranja.jpg') center/cover no-repeat;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Botão neon profissional com pulsação */
+.neon-button {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #fff;
+  text-decoration: none; /* remove sublinhado */
+  text-transform: uppercase;
+  padding: 18px 45px;
+  background-color: #111;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s ease;
+  animation: neonPulse 3s linear infinite, buttonPulse 2s ease-in-out infinite;
+  box-shadow:
+    0 0 10px #ff66a3,
+    0 0 20px #ff66a3,
+    0 0 30px #66ffff,
+    0 0 40px #fffc66,
+    0 0 50px #ff66a3;
+}
+
+/* Hover elegante */
+.neon-button:hover {
+  transform: scale(1.15);
+}
+
+/* Animação do glow colorido */
+@keyframes neonPulse {
+  0% {
+    box-shadow:
+      0 0 10px #ff66a3,
+      0 0 20px #ff66a3,
+      0 0 30px #66ffff,
+      0 0 40px #fffc66,
+      0 0 50px #ff66a3;
+  }
+  25% {
+    box-shadow:
+      0 0 15px #66ffff,
+      0 0 25px #fffc66,
+      0 0 35px #ff66a3,
+      0 0 45px #ff66a3,
+      0 0 55px #66ffff;
+  }
+  50% {
+    box-shadow:
+      0 0 20px #fffc66,
+      0 0 30px #ff66a3,
+      0 0 40px #66ffff,
+      0 0 50px #ff66a3,
+      0 0 60px #fffc66;
+  }
+  75% {
+    box-shadow:
+      0 0 15px #ff66a3,
+      0 0 25px #66ffff,
+      0 0 35px #fffc66,
+      0 0 45px #66ffff,
+      0 0 55px #ff66a3;
+  }
+  100% {
+    box-shadow:
+      0 0 10px #ff66a3,
+      0 0 20px #ff66a3,
+      0 0 30px #66ffff,
+      0 0 40px #fffc66,
+      0 0 50px #ff66a3;
+  }
+}
+
+/* Pulsação do botão (tamanho) */
+@keyframes buttonPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* Responsividade para mobile */
+@media (max-width: 480px) {
+  .neon-button {
+    font-size: 1rem;
+    padding: 14px 28px;
+  }
+}
+</style>
+</head>
+<body>
+
+<a href="presente.html" class="neon-button">Abra seu presente</a>
+
+</body>
+</html>

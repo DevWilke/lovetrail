@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartinha Virtual</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+    .font-script { font-family: 'Great Vibes', cursive; }
+
+    /* Fundo semitransparente */
+    .overlay {
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url(imagens/casalvermelho.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      backdrop-filter: blur(2px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-y: auto;
+      padding: 1rem;
+      flex-direction: column;
+    }
+
+    /* Carta */
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      max-width: 90%;
+      width: 400px;
+      text-align: left;
+      position: relative;
+      z-index: 10;
+      overflow-y: auto;
+      max-height: 70vh;
+    }
+
+    /* Assinatura */
+    .signature {
+      text-align: right;
+      margin-top: 1.5rem;
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.5rem;
+      color: #c2185b;
+    }
+
+    /* Botão fora da carta */
+    #startGames {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    /* Parágrafo da carta */
+    .paragraph {
+      margin-bottom: 1rem;
+      line-height: 1.5rem;
+      color: #880e4f;
+    }
+
+    /* Cabeçalho e rodapé animados (marquee) */
+    .marquee {
+      position: fixed;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      background: rgba(70, 9, 40, 0.411);
+      color: white;
+      font-weight: bold;
+      z-index: 20;
+      padding: 0.5rem 0;
+    }
+    .marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 35s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .marquee-top { top: 0; }
+    .marquee-bottom { bottom: 0; }
+  </style>
+</head>
+<body class="bg-pink-100 flex justify-center items-center h-screen">
+
+  <!-- Cabeçalho animado -->
+  <div class="marquee marquee-top"><span>💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖</span></div>
+
+  <!-- Rodapé animado -->
+  <div class="marquee marquee-bottom"><span>💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖 Eu te amo 💖</span></div>
+
+  <!-- Carta -->
+  <div class="overlay">
+    <div class="card">
+      <h1 class="text-3xl font-script text-pink-800 mb-4 text-center" id="letter-title"></h1>
+      <div id="letter-text" class="text-lg"></div>
+      <div class="signature" id="letter-signature"></div>
+    </div>
+
+    <!-- Botão fora da carta -->
+    <button id="startGames" class="bg-pink-600 text-white px-6 py-3 rounded-full shadow-lg text-lg font-semibold w-full max-w-xs hover:scale-105 transition-transform duration-300">
+      Caminho da nossa Jornada 💕
+    </button>
+  </div>
+
+  <script>
+    // ---------- Conteúdo da carta ----------
+    const title = "Para você, meu amor 💖";
+    const paragraphs = [
+      "Desde o primeiro momento em que nos conhecemos, algo dentro de mim sabia que você seria especial. Cada sorriso seu, cada gesto, cada palavra, ficou gravado em meu coração.",
+      "Passamos por momentos incríveis juntos e também enfrentamos desafios, mas cada experiência só fortaleceu nosso amor. Sinto-me mais completo(a) por ter você ao meu lado.",
+      "Às vezes, é impossível expressar tudo o que sinto, mas quero que saiba que cada instante contigo é inesquecível. Você é minha inspiração, minha alegria e minha paz.",
+      "Quero continuar construindo memórias, viajando, rindo e amando você todos os dias. Obrigado(a) por ser quem você é e por me fazer tão feliz.",
+    ];
+    const signature = "Com todo meu amor, \n[Seu Nome]";
+
+    const titleEl = document.getElementById('letter-title');
+    const textEl = document.getElementById('letter-text');
+    const signatureEl = document.getElementById('letter-signature');
+    const startGamesBtn = document.getElementById('startGames');
+
+    // ---------- Função de digitação letra por letra ----------
+    function typeEffect(element, content, delay=40, callback=null) {
+      let i = 0;
+      function type() {
+        if(i < content.length) {
+          element.innerHTML += content[i];
+          i++;
+          setTimeout(type, delay);
+        } else if(callback) {
+          callback();
+        }
+      }
+      type();
+    }
+
+    // ---------- Digitar parágrafos sequenciais ----------
+    function typeParagraphs(paragraphs, index=0) {
+      if(index >= paragraphs.length) {
+        // Ao terminar todos os parágrafos, digitar a assinatura
+        typeEffect(signatureEl, signature, 100, () => {
+          // Mostrar botão fora da carta
+          startGamesBtn.style.display = 'block';
+        });
+        return;
+      }
+      const p = document.createElement('p');
+      p.classList.add('paragraph');
+      textEl.appendChild(p);
+      typeEffect(p, paragraphs[index], 40, () => typeParagraphs(paragraphs, index+1));
+    }
+
+    // Iniciar digitação
+    typeEffect(titleEl, title, 100, () => typeParagraphs(paragraphs));
+
+    // ---------- Botão para jogos ----------
+    startGamesBtn.addEventListener('click', ()=>{
+      document.body.style.transition = 'opacity 0.5s';
+      document.body.style.opacity = 0;
+      setTimeout(()=>window.location.href='jogos.html',500);
+    });
+  </script>
+
+</body>
+</html>

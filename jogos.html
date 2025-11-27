@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nossa Jornada</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+.font-script { font-family: 'Great Vibes', cursive; }
+
+body {
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('imagens/casalpordosol.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-x: hidden;
+    padding-bottom: 120px;
+}
+
+/* Pontos */
+.point {
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    background: #ff2d71;
+    border: 3px solid white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    animation: pulse 1.6s infinite;
+    z-index: 10;
+    cursor: pointer;
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,45,113,0.6); }
+    100% { box-shadow: 0 0 0 18px rgba(255,45,113,0); }
+}
+
+.point-title {
+    position: absolute;
+    transform: translate(-50%, -130%);
+    font-size: 1rem;
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 3px #ff2d71;
+    z-index: 20;
+}
+
+/* FOTO FULLSCREEN */
+#photoView {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+#photoView img {
+    width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+}
+.closePhoto {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 8px 14px;
+    border-radius: 9999px;
+    font-weight: bold;
+    color: #ff2d71;
+}
+
+/* CORAÇÕES */
+.floating-heart {
+    position: absolute;
+    font-size: 28px;
+    animation: floatUp 2s ease-out forwards;
+    pointer-events: none;
+}
+@keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-80px) scale(1.6); }
+}
+
+</style>
+</head>
+
+<body>
+
+<h1 class="font-serif text-3xl text-pink-700 text-center mb-8">Nossa Jornada 💕</h1>
+
+<!-- Música -->
+<button id="toggleMusic"
+class="bg-pink-600 text-white px-4 py-2 rounded-full shadow mb-4 block mx-auto">
+Ouça nossa música 👩‍❤️‍👨
+</button>
+
+<!-- TRAJETO (SVG CURVO) -->
+<div class="relative mx-auto" style="width: 320px; height: 600px;">
+
+    <!-- Caminho principal -->
+    <svg width="320" height="600" class="absolute inset-0">
+        <!-- Linha de fundo -->
+        <path id="mainPath"
+              d="M 160 20 
+                 C 40 120, 280 220, 160 320
+                 C 40 420, 280 520, 160 580"
+              stroke="#ff8db8"
+              stroke-width="8"
+              fill="none"
+              stroke-linecap="round" />
+
+        <!-- Linha iluminada -->
+        <path id="highlightPath"
+              d="M 160 20 
+                 C 40 120, 280 220, 160 320
+                 C 40 420, 280 520, 160 580"
+              stroke="#ff2d71"
+              stroke-width="10"
+              fill="none"
+              stroke-linecap="round"
+              stroke-dasharray="800"
+              stroke-dashoffset="800"
+              style="transition: stroke-dashoffset 1s ease;" />
+    </svg>
+
+    <!-- PONTOS COM TÍTULO -->
+    <div class="point" style="top:30px; left:160px;" onclick="openStep(1)"></div>
+    <div class="point-title" style="top:70px; left:160px;">Onde começou</div>
+
+    <div class="point" style="top:200px; left:180px;" onclick="openStep(2)"></div>
+    <div class="point-title" style="top:220px; left:90px;">Primeira viagem</div>
+
+    <div class="point" style="top:360px; left:135px;" onclick="openStep(3)"></div>
+    <div class="point-title" style="top:400px; left:215px;">Momento único</div>
+
+    <div class="point" style="top:580px; left:160px;" onclick="openStep(4)"></div>
+    <div class="point-title" style="top:560px; left:160px;">Certeza do amor</div>
+
+</div>
+
+<!-- FOTO FULLSCREEN -->
+<div id="photoView">
+    <button class="closePhoto" onclick="closePhoto()">Fechar ✖</button>
+    <img id="photoDisplay" src="">
+</div>
+
+<!-- MENSAGEM FINAL -->
+<div id="finalMessage"
+class="hidden mt-10 mx-4 bg-white p-6 rounded-xl shadow text-center text-pink-700 text-xl font-semibold">
+Você percorreu toda nossa história...<br>
+E ainda temos uma vida inteira pela frente! 👩‍❤️‍👨💖
+</div>
+
+<!-- VOLTAR -->
+<button onclick="location.href='index.html'"
+class="fixed bottom-6 bg-pink-400 text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium w-40 left-1/2 -translate-x-1/2">
+Voltar ao início
+</button>
+
+<!-- ÁUDIO -->
+<audio id="bgMusic" loop>
+  <source src="musica-romantica.mp3" type="audio/mp3">
+</audio>
+
+<script>
+/* Dados */
+const steps = {
+    1:{img:"imagens/casalpordosol.jpg"},
+    2:{img:"imagens/casalvermelho.jpg"},
+    3:{img:"imagens/pordosollaranja.jpg"},
+    4:{img:"foto4.jpg"}
+};
+
+let unlocked = 0;
+
+/* Abrir foto */
+function openStep(id){
+    if(navigator.vibrate) navigator.vibrate(80);
+
+    document.getElementById("photoDisplay").src = steps[id].img;
+    document.getElementById("photoView").style.display = "flex";
+
+    unlocked++;
+    highlightProgress(unlocked);
+
+    showHearts();
+
+    if(unlocked === 4){
+        setTimeout(()=>{
+            document.getElementById("finalMessage").classList.remove("hidden");
+            showHearts(); showHearts();
+        },500);
+    }
+}
+
+/* Fechar foto */
+function closePhoto(){
+    document.getElementById("photoView").style.display="none";
+}
+
+/* Corações */
+function showHearts(){
+    for(let i=0;i<6;i++){
+        const h = document.createElement("div");
+        h.className="floating-heart";
+        h.innerText="💖";
+        h.style.left=(Math.random()*80+10)+"%";
+        h.style.bottom="20px";
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(),2200);
+    }
+}
+
+/* Linha acendendo */
+function highlightProgress(step){
+    const highlight = document.getElementById("highlightPath");
+    const total = 800;
+    const part = total / 4;
+    highlight.style.strokeDashoffset = total - (part * step);
+}
+
+/* Música */
+const music = document.getElementById("bgMusic");
+toggleMusic.onclick = ()=>{
+    if(music.paused){
+        music.play(); toggleMusic.innerText="🔈 Música tocando";
+    } else {
+        music.pause(); toggleMusic.innerText="🔊 Música";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memórias que nos unem</title>
+<!-- Fonte legível e feminina -->
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* Geral */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Cormorant', serif;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)),
+                url('imagens/arvorerosa.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+}
+
+/* Gradiente para títulos */
+h1, h2 {
+    background: linear-gradient(90deg, #ff4081, #fcbfd6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Cabeçalho */
+h1 {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+/* Subtítulo */
+h2.subtitle {
+    font-weight: normal;
+    margin-bottom: 30px;
+    font-size: 1.3em;
+}
+
+/* Carrossel */
+.carousel-container {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    aspect-ratio: 3/4;
+    margin: 0 auto 20px auto;
+    overflow: hidden;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.1);
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+.carousel-slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* Botões do carrossel */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 10;
+}
+
+.prev { left: 5%; }
+.next { right: 5%; }
+
+.prev:hover, .next:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+/* Cronômetro - card */
+.timer-card {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px 15px;
+    width: 85%;
+    max-width: 350px;
+    margin: 20px auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+/* Gradiente no card */
+.timer-card h2, .timer-card p {
+    background: linear-gradient(90deg, #ff4081, #fcbfd6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.timer-card h2 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+}
+
+.timer-card p {
+    font-size: 1.6em;
+    margin: 0;
+}
+
+/* Botão pulante */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.btn {
+    background-color: #ff4081;
+    color: white;
+    padding: 12px 30px;
+    font-size: 1em;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin: 20px auto 30px auto;
+    animation: bounce 2s infinite;
+}
+
+/* Responsividade Mobile */
+@media (max-width: 600px) {
+    h1 { font-size: 1.7em; margin-top: 25px; }
+    h2.subtitle { font-size: 1.2em; margin-bottom: 20px; }
+    .carousel-container { width: 95%; aspect-ratio: 3/4; }
+    .prev, .next { font-size: 18px; padding: 6px; }
+    .timer-card { padding: 20px 12px; width: 90%; margin: 15px auto; }
+    .timer-card h2 { font-size: 1.6em; margin-bottom: 10px; }
+    .timer-card p { font-size: 1.4em; }
+    .btn { padding: 10px 25px; font-size: 0.95em; margin: 15px auto 25px auto; }
+}
+</style>
+</head>
+<body>
+
+<h1>🌸 Memórias que nos unem 🌸</h1>
+
+<!-- Carrossel -->
+<div class="carousel-container">
+    <div class="carousel-slide">
+        <img src="imagens/casalpordosol.jpg" alt="Momento 1">
+    </div>
+    <div class="carousel-slide">
+        <img src="imagens/casalvermelho.jpg" alt="Momento 2">
+    </div>
+    <div class="carousel-slide">
+        <img src="imagens/pordosollaranja.jpg" alt="Momento 3">
+    </div>
+
+    <a class="prev" onclick="changeSlide(-1)">❮</a>
+    <a class="next" onclick="changeSlide(1)">❯</a>
+</div>
+
+<!-- Cronômetro -->
+<div class="timer-card">
+    <h2>Dias de amor:</h2>
+    <p id="tempoJuntos">Calculando...</p>
+</div>
+
+<!-- Botão -->
+<a href="carta.html" class="btn">Abrir cartinha 💌</a>
+
+<script>
+// CARROSSEL
+let slideIndex = 0;
+const slides = document.getElementsByClassName("carousel-slide");
+
+function showSlide(index) {
+    if (index >= slides.length) slideIndex = 0;
+    if (index < 0) slideIndex = slides.length - 1;
+    for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
+    slides[slideIndex].style.display = "block";
+}
+
+function changeSlide(n) {
+    slideIndex += n;
+    showSlide(slideIndex);
+}
+
+setInterval(() => { changeSlide(1); }, 5000);
+showSlide(slideIndex);
+
+// CRONÔMETRO COM ANOS
+const inicioRelacionamento = new Date("2020-01-01T00:00:00"); // ajuste
+const tempoJuntosEl = document.getElementById("tempoJuntos");
+
+function atualizarTempo() {
+    const agora = new Date();
+    
+    let anos = agora.getFullYear() - inicioRelacionamento.getFullYear();
+    
+    // Ajuste caso ainda não tenha completado aniversário do ano
+    const aniversarioEsteAno = new Date(inicioRelacionamento);
+    aniversarioEsteAno.setFullYear(agora.getFullYear());
+    if (agora < aniversarioEsteAno) anos--;
+
+    // Diferença desde último aniversário
+    const ultimoAniversario = new Date(inicioRelacionamento);
+    ultimoAniversario.setFullYear(inicioRelacionamento.getFullYear() + anos);
+    let diff = agora - ultimoAniversario;
+
+    const dias = Math.floor(diff / (1000*60*60*24));
+    const horas = Math.floor((diff / (1000*60*60)) % 24);
+    const minutos = Math.floor((diff / (1000*60)) % 60);
+    const segundos = Math.floor((diff / 1000) % 60);
+
+    tempoJuntosEl.textContent = `${anos} anos, ${dias} dias, ${horas}h ${minutos}m ${segundos}s`;
+}
+
+setInterval(atualizarTempo, 1000);
+atualizarTempo();
+</script>
+
+</body>
+</html>
